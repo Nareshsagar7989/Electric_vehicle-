@@ -8,18 +8,17 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-df = pd.read_csv("Electric_Vehicle_Population_By_County.csv")
-df.head() # top 5 rows
+df = pd.read_csv("C:\\Users\\NARESH SAGAR\\Downloads\\ev_data.csv")
+print(df.head(5)) # top 5 rows 
 # no of rows and cols
-df.shape
+print(df.shape) 
 # Data Types, class and memory alloc
-df.info()
-df.isnull().sum()
+print(df.info())
+print(df.isnull().sum())
 # Compute Q1 and Q3
 Q1 = df['Percent Electric Vehicles'].quantile(0.25)
 Q3 = df['Percent Electric Vehicles'].quantile(0.75)
 IQR = Q3 - Q1
-
 # Define outlier boundaries
 lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
@@ -47,10 +46,12 @@ print("Missing after fill:")
 print(df[['County', 'State']].isnull().sum())
 
 df.head()
+#remove outliers
 # Cap the outliers - it keeps all the data while reducing the skew from extreme values.
 
 df['Percent Electric Vehicles'] = np.where(df['Percent Electric Vehicles'] > upper_bound, upper_bound,
                                  np.where(df['Percent Electric Vehicles'] < lower_bound, lower_bound, df['Percent Electric Vehicles']))
 
+# Identify outliers
 outliers = df[(df['Percent Electric Vehicles'] < lower_bound) | (df['Percent Electric Vehicles'] > upper_bound)]
 print("Number of outliers in 'Percent Electric Vehicles':", outliers.shape[0])
